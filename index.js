@@ -27,7 +27,7 @@ let persons = [
 ]
 
 
-app.get('/',(request, response) =>{
+app.get('/', (request, response) => {
     response.send('<h2>Hola mundo</h2>')
 })
 
@@ -35,6 +35,18 @@ app.get('/api/persons', (request, response) => {
     response.json(persons)
 })
 
+const TotalPersons = () => {
+    return persons.length;
+}
+const TodayDate = () => {
+    return Date();
+}
+app.get('/api/info', (request, response) => {
+    response.send(
+        `La agenda tiene informacion de ${TotalPersons()} personas 
+         <br> ${TodayDate()}`
+    );
+})
 
 const PORT = 3002;
 app.listen(PORT, () => {
