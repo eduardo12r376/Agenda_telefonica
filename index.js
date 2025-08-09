@@ -62,21 +62,38 @@ app.get('/api/persons/:id', (request, response) => {
 })
 
 
-app.delete('/api/persons/:id', (request, response) =>{
+app.delete('/api/persons/:id', (request, response) => {
     const id = Number(request.params.id);
     persons = persons.filter(p => p.id !== id);
     response.status(204).end();
 })
 
 const generateId = () => {
-    const maxId = persons.length > 0 
-    ? Math.max(...persons.map(p => p.id)) : 0;
+    const maxId = persons.length > 0
+        ? Math.max(...persons.map(p => p.id)) : 0;
 
-    return maxId +1;
+    return maxId + 1;
 }
 
 app.post('/api/persons', (request, response) => {
     const body = request.body;
+    console.log('Este es el body:', body);
+
+
+    if (!body.name || !body.number) {
+        console.log('Debes ingresar el nombre y el numero del contacto')
+        return response.status(400).json({
+            error: 'name or number missing'
+        })
+    }
+
+    const existingPerson = persons.find(p => p.name === body.name);
+    if (existingPerson) {
+        console.log('Esta persona ya se encuentra registrada en la agenda')
+        return response.status(400).json({
+            error: `${existingPerson.name} ya se ecuentra registrado en la agenda.`
+        })
+    }
 
     const person = {
         name: body.name,
